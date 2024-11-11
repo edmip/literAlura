@@ -1,3 +1,4 @@
+
 package com.aluracursos.literalura.principal;
 
 import com.aluracursos.literalura.mensajes.Mensajes;
@@ -5,15 +6,14 @@ import com.aluracursos.literalura.model.Autor;
 import com.aluracursos.literalura.model.Datos;
 import com.aluracursos.literalura.model.DatosLibro;
 import com.aluracursos.literalura.model.Libro;
+import com.aluracursos.literalura.repository.IAutorRepository;
 import com.aluracursos.literalura.repository.ILibroRepository;
 import com.aluracursos.literalura.service.ConsumoApi;
 import com.aluracursos.literalura.service.ConvierteDatos;
-
-import java.util.ArrayList;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -23,12 +23,17 @@ public class Principal {
     Scanner scanner = new Scanner(System.in);
     private int opcionScogida = -1;
     private ILibroRepository repository;
+    private IAutorRepository repository2;
     private List<Libro> libros;
+    private Autor autor;
+    private String libroAutor;
 
 
-    public Principal(ILibroRepository repository) {
+    public Principal(ILibroRepository repository, IAutorRepository repository2) {
         this.repository = repository;
+        this.repository2 = repository2;
     }
+
 
     public void muestraElMennu(){
 
@@ -38,8 +43,10 @@ public class Principal {
             opcionScogida = scanner.nextInt();
             scanner.nextLine();
 
+
             switch (opcionScogida){
                 case 1:
+
                     System.out.println("ingrese nombre de libro");
                     String nombre = scanner.nextLine();
 
@@ -50,9 +57,15 @@ public class Principal {
                     Optional<DatosLibro> primeraCoincidencia = datosLibro.stream().findFirst();
 
                     if (primeraCoincidencia.isPresent()) {
+
                         DatosLibro datosLibroEncontrado = primeraCoincidencia.get();
                         Libro libro = new Libro(datosLibroEncontrado); // Crea un objeto Libro con los datos del libro encontrado
+                        autor= libro.getAutor().get(0);
+
+                        libroAutor = libro.getTitulo();
+                        autor.setTituliLibro(libroAutor);
                         repository.save(libro);
+
                         System.out.println(libro.toString());
 
                     } else {
@@ -67,10 +80,14 @@ public class Principal {
 
                 case 3:
 
-
                     listarAutoresRegistrados();
-
                     break;
+
+                case 4:
+
+                    AutoresVivos();
+                    break;
+
                 default:
                     System.out.println("Opcion Invalida");
             }
@@ -90,27 +107,31 @@ public class Principal {
             System.out.println(l.toString());
         });
 
-//        libros.forEach(l -> {
-//            System.out.println("Título: " + l.getTitulo());
-//            System.out.println("Idioma: " + l.getIdioma());
-//            System.out.println("Número de descargas: " + l.getNumeroDeDescargas());
-//            System.out.println("Autores:");
-//            l.getAutor().stream()
-//                    .map(autor -> "- " + autor.getNombreAutor() + " (" + autor.getFechaNacimientoAutor() + ")")
-//                    .forEach(System.out::println);
-//            System.out.println("--------------------");
-//       });
     }
 
+
+    @Transactional
     private void listarAutoresRegistrados() {
 
-        libros = repository.findAll();
+        List<String> autores = repository2.MostrarAutores();
+        autores.forEach(a -> {
+            String[] datos = a.split(",(?=\\w)"); // Divide por coma solo si hay un carácter alfanumérico después
+            System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n\n", datos[0], datos[1], datos[2], datos[3]));
 
-        libros.forEach(l -> l.getAutor().stream()
-                    .map(autor -> "- " + autor.getNombreAutor() + " (" + autor.getFechaNacimientoAutor() + ") (" + autor.getFechaNacimientoAutor() + ")")
-                    .forEach(System.out::println));
-
+        });
     }
 
 
+    private void AutoresVivos() {
+
+        System.out.println("INGRESE LA FECHA QUE DESEA CONSULTAR");
+        int fecha = scanner.nextInt();
+
+        List<String> autoresVivos = repository2.autoresVivos(fecha);
+        autoresVivos.forEach(a -> {
+            String[] datos = a.split(",(?=\\w)"); // Divide por coma solo si hay un carácter alfanumérico después
+            System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n\n", datos[0], datos[1], datos[2], datos[3]));
+
+        });
+    }
 }

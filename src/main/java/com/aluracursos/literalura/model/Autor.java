@@ -3,7 +3,13 @@ package com.aluracursos.literalura.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @Entity
@@ -15,13 +21,14 @@ public class Autor {
     private long id;
 
     @JsonProperty("name")
+//@Column(unique = true)
     private String nombreAutor;
 
     @JsonProperty("birth_year")
-    private String fechaNacimientoAutor;
+    private int fechaNacimientoAutor;
 
     @JsonProperty("death_year")
-    private String fechaFallecimientoAutor;
+    private int fechaFallecimientoAutor;
 
     @ManyToMany
     @JoinTable( //Esto es necesario cuando la realacion es muchos a muchos
@@ -29,27 +36,17 @@ public class Autor {
             joinColumns = @JoinColumn(name = "autor_id"), // Columna de unión para Autor
             inverseJoinColumns = @JoinColumn(name = "libro_id") // Columna de unión para Libro
     )
+    @Fetch(FetchMode.JOIN)
     private List<Libro> libro;
 
+    @Column(name = "libros")
+    private String tituliLibro;
 
 
     public Autor() {
     }
 
 
-
-    public Autor(DatosAutor datosAutor) {
-
-        this.nombreAutor = datosAutor.nombreAutor();
-        this.fechaNacimientoAutor = datosAutor.fechaNacimientoAutor();
-        this.fechaFallecimientoAutor = datosAutor.fechaFallecimientoAutor();
-
-    }
-    public Autor(String nombreAutor, String fechaNacimientoAutor, String fechaFallecimientoAutor) {
-        this.nombreAutor = nombreAutor;
-        this.fechaNacimientoAutor = fechaNacimientoAutor;
-        this.fechaFallecimientoAutor = fechaFallecimientoAutor;
-    }
 
     public long getId() {
         return id;
@@ -67,38 +64,52 @@ public class Autor {
         this.nombreAutor = nombreAutor;
     }
 
-    public String getFechaNacimientoAutor() {
+    public int getFechaNacimientoAutor() {
         return fechaNacimientoAutor;
     }
 
-    public void setFechaNacimientoAutor(String fechaNacimientoAutor) {
+    public void setFechaNacimientoAutor(int fechaNacimientoAutor) {
         this.fechaNacimientoAutor = fechaNacimientoAutor;
     }
 
-    public String getFechaFallecimientoAutor() {
+    public int getFechaFallecimientoAutor() {
         return fechaFallecimientoAutor;
     }
 
-    public void setFechaFallecimientoAutor(String fechaFallecimientoAutor) {
+    public void setFechaFallecimientoAutor(int fechaFallecimientoAutor) {
         this.fechaFallecimientoAutor = fechaFallecimientoAutor;
     }
 
-    public List<Libro> getLibro() {
-        return libro;
+    public String getTituliLibro() {
+        return tituliLibro;
     }
 
-    public void setLibro(List<Libro> libro) {
-        this.libro = libro;
+    public void setTituliLibro(String tituliLibro) {
+        this.tituliLibro = tituliLibro;
     }
+
+//    public String getLibro(List<Libro> libro) {
+//
+//        return libro.stream()
+//                .map(l -> l.getTitulo())
+//                .collect(Collectors.joining(", "));
+//    }
+//
+//    public void setLibro(List<Libro> libro) {
+//        this.libro = libro; // Asigna la lista de libros recibida
+//        for (Libro l : this.libro) {
+//            l.setTitulo(l.getTitulo());
+//        }
+//    }
 
     @Override
     public String toString() {
         return "Autor{" +
-                "id=" + id +
-                ", nombreAutor='" + nombreAutor + '\'' +
-                ", fechaNacimientoAutor='" + fechaNacimientoAutor + '\'' +
-                ", fechaFallecimientoAutor='" + fechaFallecimientoAutor + '\'' +
-                ", libro=" + libro +
+
+                ", nombreAutor='" + getNombreAutor() + '\'' +
+                ", fechaNacimientoAutor='" + getFechaNacimientoAutor() + '\'' +
+                ", fechaFallecimientoAutor='" + getFechaFallecimientoAutor() + '\'' +
+                ", libro=" + getTituliLibro() +
                 '}';
     }
 }
