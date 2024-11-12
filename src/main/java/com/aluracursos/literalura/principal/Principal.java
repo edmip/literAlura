@@ -2,10 +2,7 @@
 package com.aluracursos.literalura.principal;
 
 import com.aluracursos.literalura.mensajes.Mensajes;
-import com.aluracursos.literalura.model.Autor;
-import com.aluracursos.literalura.model.Datos;
-import com.aluracursos.literalura.model.DatosLibro;
-import com.aluracursos.literalura.model.Libro;
+import com.aluracursos.literalura.model.*;
 import com.aluracursos.literalura.repository.IAutorRepository;
 import com.aluracursos.literalura.repository.ILibroRepository;
 import com.aluracursos.literalura.service.ConsumoApi;
@@ -85,7 +82,12 @@ public class Principal {
 
                 case 4:
 
-                    AutoresVivos();
+                    autoresVivos();
+                    break;
+
+                case 5:
+
+                    librosPorIdiomas();
                     break;
 
                 default:
@@ -122,10 +124,11 @@ public class Principal {
     }
 
 
-    private void AutoresVivos() {
+    private void autoresVivos() {
 
         System.out.println("INGRESE LA FECHA QUE DESEA CONSULTAR");
         int fecha = scanner.nextInt();
+        scanner.nextLine();
 
         List<String> autoresVivos = repository2.autoresVivos(fecha);
         autoresVivos.forEach(a -> {
@@ -133,5 +136,33 @@ public class Principal {
             System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n\n", datos[0], datos[1], datos[2], datos[3]));
 
         });
+    }
+
+    private void librosPorIdiomas() {
+
+        // Mostrar las opciones de idioma al usuario
+        for (int i = 0; i < Lenguaje.values().length; i++) {
+            System.out.println((i + 1) + ". " + Lenguaje.values()[i].getCodigo());
+        }
+
+        // Leer la opción del usuario
+        int opcion = scanner.nextInt();
+        scanner.nextLine(); // Consumir el salto de línea
+
+        // Validar la opción
+        if (opcion >= 1 && opcion <= Lenguaje.values().length) {
+            // Obtener el idioma seleccionado del enum
+            Lenguaje idiomaEscogico = Lenguaje.values()[opcion - 1];
+
+            // Buscar libros por idioma
+            libros = repository.BuscarLibroPorIdioma(idiomaEscogico.getCodigo());
+
+            // Mostrar los resultados
+            libros.forEach(l -> {
+                System.out.println(l.toString());
+            });
+        } else {
+            System.out.println("Opción inválida. Por favor, selecciona un idioma válido.");
+        }
     }
 }

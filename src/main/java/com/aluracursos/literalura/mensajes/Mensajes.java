@@ -14,4 +14,15 @@ public class Mensajes {
                                             0.- salir""";
     }
 
+    public static final String buscarLibroPorIdioma(){ //MENU PRINCIPAL DE OPCIONES
+
+        return """ 
+                                            INGRESE EL IDIOMA EN EL CUAL DESEA BUSCAR LOS LIBROS: 
+                                            
+                                            1.- ESPAÑOL
+                                            2.- INGLES
+                                            3.- FRANCES
+                                            """;
+    }
+
 }
