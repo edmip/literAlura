@@ -8,11 +8,17 @@ import com.aluracursos.literalura.repository.ILibroRepository;
 import com.aluracursos.literalura.service.ConsumoApi;
 import com.aluracursos.literalura.service.ConvierteDatos;
 import jakarta.transaction.Transactional;
+
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
+
+    // Códigos de escape ANSI para el color rojo
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     private ConsumoApi consumoApi = new ConsumoApi(); //clase con el metodo que hace la consulta
     private ConvierteDatos convierteDatos = new ConvierteDatos(); //clase con el metodo que transforma la consulta
@@ -36,63 +42,75 @@ public class Principal {
 
         while (opcionScogida != 0){
             System.out.println(Mensajes.menuPrincipal());
-            System.out.println("INGRESE LA OPCION A ELEGIR");
-            opcionScogida = scanner.nextInt();
-            scanner.nextLine();
+try {
+    opcionScogida = scanner.nextInt();
+    scanner.nextLine();
 
 
-            switch (opcionScogida){
-                case 1:
+    switch (opcionScogida) {
+        case 1:
 
-                    System.out.println("ingrese nombre de libro");
-                    String nombre = scanner.nextLine();
+            System.out.println("ingrese nombre de libro");
+            String nombre = scanner.nextLine();
 
-                    var json = consumoApi.obtenerDatos(URL_BASE + nombre.toLowerCase().replace(" ", "%20"));
-                    Datos datos = convierteDatos.convertirDatos(json, Datos.class);
-                    List<DatosLibro> datosLibro = datos.resultados();
+            var json = consumoApi.obtenerDatos(URL_BASE + nombre.toLowerCase().replace(" ", "%20"));
+            Datos datos = convierteDatos.convertirDatos(json, Datos.class);
+            List<DatosLibro> datosLibro = datos.resultados();
 
-                    Optional<DatosLibro> primeraCoincidencia = datosLibro.stream().findFirst();
+            Optional<DatosLibro> primeraCoincidencia = datosLibro.stream().findFirst();
 
-                    if (primeraCoincidencia.isPresent()) {
+            if (primeraCoincidencia.isPresent()) {
 
-                        DatosLibro datosLibroEncontrado = primeraCoincidencia.get();
-                        Libro libro = new Libro(datosLibroEncontrado); // Crea un objeto Libro con los datos del libro encontrado
-                        autor= libro.getAutor().get(0);
+                DatosLibro datosLibroEncontrado = primeraCoincidencia.get();
 
-                        libroAutor = libro.getTitulo();
-                        autor.setTituliLibro(libroAutor);
-                        repository.save(libro);
+                Optional<Libro> libroEnBase = repository.findByTitulo(datosLibroEncontrado.titulo());
+                
 
-                        System.out.println(libro.toString());
+                Libro libro = new Libro(datosLibroEncontrado); // Crea un objeto Libro con los datos del libro encontrado
+                autor = libro.getAutor().get(0);
 
-                    } else {
-                        System.out.println("No se encontró ningún libro con ese nombre.");
-                    }
-                    break;
+                libroAutor = libro.getTitulo();
 
-                case 2:
 
-                    mostrarLibrosGuardados();
-                    break;
 
-                case 3:
+                autor.setTituliLibro(libroAutor);
+                System.out.println(libro.toString());
+                repository.save(libro);
 
-                    listarAutoresRegistrados();
-                    break;
+                System.out.println(libro.toString());
 
-                case 4:
-
-                    autoresVivos();
-                    break;
-
-                case 5:
-
-                    librosPorIdiomas();
-                    break;
-
-                default:
-                    System.out.println("Opcion Invalida");
+            } else {
+                System.out.println("No se encontró ningún libro con ese nombre.");
             }
+            break;
+
+        case 2:
+
+            mostrarLibrosGuardados();
+            break;
+
+        case 3:
+
+            listarAutoresRegistrados();
+            break;
+
+        case 4:
+
+            autoresVivos();
+            break;
+
+        case 5:
+
+            librosPorIdiomas();
+            break;
+
+        default:
+            System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RESET);
+    }
+}catch (InputMismatchException e){
+    System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RESET);
+    scanner.nextLine();
+}
         }
 
     }
