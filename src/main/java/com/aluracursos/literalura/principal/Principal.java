@@ -9,6 +9,7 @@ import com.aluracursos.literalura.service.ConsumoApi;
 import com.aluracursos.literalura.service.ConvierteDatos;
 import jakarta.transaction.Transactional;
 
+import java.awt.image.BandedSampleModel;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,11 @@ public class Principal {
 
     // Códigos de escape ANSI para el color rojo
     public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED_RESET = "\u001B[0m";
+
+    // Códigos de escape ANSI para el color verde
+     public static final String ANSI_GREEN = "\u001B[32m";
+     public static final String ANSI_GREEN_RESET = "\u001B[0m";
 
     private ConsumoApi consumoApi = new ConsumoApi(); //clase con el metodo que hace la consulta
     private ConvierteDatos convierteDatos = new ConvierteDatos(); //clase con el metodo que transforma la consulta
@@ -50,8 +55,10 @@ try {
     switch (opcionScogida) {
         case 1:
 
-            System.out.println("ingrese nombre de libro");
+            System.out.println("\ningrese nombre de libro");
             String nombre = scanner.nextLine();
+            Thread hiloCargando = new Thread(() -> Mensajes.cargando("\nBUSCANDO..."));
+            hiloCargando.start();
 
             var json = consumoApi.obtenerDatos(URL_BASE + nombre.toLowerCase().replace(" ", "%20"));
             Datos datos = convierteDatos.convertirDatos(json, Datos.class);
@@ -65,22 +72,28 @@ try {
 
                 Optional<Libro> libroEnBase = repository.findByTitulo(datosLibroEncontrado.titulo());
                 
+                if (libroEnBase.isPresent()){
 
-                Libro libro = new Libro(datosLibroEncontrado); // Crea un objeto Libro con los datos del libro encontrado
-                autor = libro.getAutor().get(0);
+                    System.out.println(ANSI_GREEN + "\nEL LIBRO YA ESTA GUARDADO EN LA BASE DE DATOS" + ANSI_GREEN_RESET);
+                    libroEnBase.toString();
 
-                libroAutor = libro.getTitulo();
+                }else {
+                    System.out.println(ANSI_GREEN + "libro encontrado" + ANSI_GREEN_RESET);
+                    Libro libro = new Libro(datosLibroEncontrado); // Crea un objeto Libro con los datos del libro encontrado
+                    autor = libro.getAutor().get(0);
 
+                    libroAutor = libro.getTitulo();
 
+                    autor.setTituliLibro(libroAutor);
+                    System.out.println(libro.toString());
+                    repository.save(libro);
 
-                autor.setTituliLibro(libroAutor);
-                System.out.println(libro.toString());
-                repository.save(libro);
+                    System.out.println(libro.toString());
 
-                System.out.println(libro.toString());
+                }
 
             } else {
-                System.out.println("No se encontró ningún libro con ese nombre.");
+                System.out.println(ANSI_RED + "No se encontró ningún libro con ese nombre." + ANSI_RED_RESET);
             }
             break;
 
@@ -105,10 +118,10 @@ try {
             break;
 
         default:
-            System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RESET);
+            System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RED_RESET);
     }
 }catch (InputMismatchException e){
-    System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RESET);
+    System.out.println(ANSI_RED + "OPCION INVÁLIDA..." + ANSI_RED_RESET);
     scanner.nextLine();
 }
         }
@@ -136,7 +149,7 @@ try {
         List<String> autores = repository2.MostrarAutores();
         autores.forEach(a -> {
             String[] datos = a.split(",(?=\\w)"); // Divide por coma solo si hay un carácter alfanumérico después
-            System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n\n", datos[0], datos[1], datos[2], datos[3]));
+            System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n", datos[0], datos[1], datos[2], datos[3]));
 
         });
     }
@@ -151,7 +164,7 @@ try {
         List<String> autoresVivos = repository2.autoresVivos(fecha);
         autoresVivos.forEach(a -> {
             String[] datos = a.split(",(?=\\w)"); // Divide por coma solo si hay un carácter alfanumérico después
-            System.out.println(String.format("Autor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n\n", datos[0], datos[1], datos[2], datos[3]));
+            System.out.println(String.format("\nAutor: %s\nFecha de Nacimiento: %s\nFecha de Fallecimiento: %s\nLibros: %s\n", datos[0], datos[1], datos[2], datos[3]));
 
         });
     }
@@ -180,7 +193,7 @@ try {
                 System.out.println(l.toString());
             });
         } else {
-            System.out.println("Opción inválida. Por favor, selecciona un idioma válido.");
+            System.out.println(ANSI_RED + "Opción inválida. Por favor, selecciona un idioma válido." + ANSI_RED_RESET);
         }
     }
 }
