@@ -90,7 +90,7 @@ Opcion:
 ![image](https://github.com/user-attachments/assets/cd423a91-c915-4a06-b6f9-a4a409e33c92)
 
 
-4. **Listar Autores vivos en un determinado año**: Permite al usuario ingresar un año y ver autores que aún vivían en esa fecha, basándose en la fecha de nacimiento y fallecimiento registrada.
+4. **Listar Autores vivos en un determinado año**: Permite al usuario ingresar un año y ver los autores que aún vivían en esa fecha, basándose en la fecha de nacimiento y fallecimiento registrada.
 
 ![image](https://github.com/user-attachments/assets/00f1467d-1bfb-4dfc-876d-c7e0ae8c16d6)
 
