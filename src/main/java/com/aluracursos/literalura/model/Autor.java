@@ -5,11 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 
 @Entity
@@ -88,19 +85,6 @@ public class Autor {
         this.tituliLibro = tituliLibro;
     }
 
-//    public String getLibro(List<Libro> libro) {
-//
-//        return libro.stream()
-//                .map(l -> l.getTitulo())
-//                .collect(Collectors.joining(", "));
-//    }
-//
-//    public void setLibro(List<Libro> libro) {
-//        this.libro = libro; // Asigna la lista de libros recibida
-//        for (Libro l : this.libro) {
-//            l.setTitulo(l.getTitulo());
-//        }
-//    }
 
     @Override
     public String toString() {
