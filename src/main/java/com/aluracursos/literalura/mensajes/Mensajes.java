@@ -34,7 +34,7 @@ public class Mensajes {
         for (char letra : palabra.toCharArray()) {
             System.out.print(letra);
             try {
-                Thread.sleep(200);
+                Thread.sleep(150);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

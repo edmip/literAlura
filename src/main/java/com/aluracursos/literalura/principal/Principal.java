@@ -86,6 +86,7 @@ public class Principal {
 
                                 autor.setTituliLibro(libroAutor);
                                 repository.save(libro);
+                                System.out.println(ANSI_GREEN + "\n El Siguiente libro fue Registrado en la Base de Datos: " + ANSI_GREEN_RESET);
                                 System.out.println(libro.toString());
 
                             }
@@ -178,7 +179,7 @@ public class Principal {
 
         // Mostrar las opciones de idioma al usuario
         for (int i = 0; i < Lenguaje.values().length; i++) {
-            System.out.println((i + 1) + ". " + Lenguaje.values()[i].getCodigo());
+            System.out.println((i + 1) + ". " + Lenguaje.values()[i].getCodigo() + " (" +  Lenguaje.values()[i].getNombre() + ")");
         }
 
         // Leer la opción del usuario
