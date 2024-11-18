@@ -43,6 +43,8 @@ public class Principal {
 
     public void muestraElMennu(){
 
+        System.out.println(Mensajes.saludoPrincipal());
+
         while (opcionScogida != 0){
             System.out.println(Mensajes.menuPrincipal());
             try {

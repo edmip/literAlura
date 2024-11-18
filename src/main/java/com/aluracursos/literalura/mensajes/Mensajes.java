@@ -2,6 +2,17 @@ package com.aluracursos.literalura.mensajes;
 
 public class Mensajes {
 
+    // Códigos de escape ANSI para el color verde
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_GREEN_RESET = "\u001B[0m";
+
+    public static final String saludoPrincipal() {
+        return ANSI_GREEN + "╔════════════════════════════════════════════╗\n"
+                + "║                 Liter_Alura" + ANSI_GREEN_RESET + ANSI_GREEN+"                ║\n"
+                + "║ "   + "           Tu Biblioteca Virtual" + ANSI_GREEN_RESET + ANSI_GREEN + "           ║\n"
+                + "╚════════════════════════════════════════════╝" + ANSI_GREEN_RESET;
+    }
+
     public static final String menuPrincipal() { //MENU PRINCIPAL DE OPCIONES
 
         return """
