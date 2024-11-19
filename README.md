@@ -75,9 +75,11 @@ Opcion:
 ```
 
 ### 🚀Funcionalidades
+
 1. **Buscar Libro por Título**: Realiza una búsqueda por coincidencia parcial del título en la API de Gutendex, luego la persiste en la base de datos.
 
 ![image](https://github.com/user-attachments/assets/afe4f377-b0fa-44a1-9a7d-fe259588280b)
+
 
 
 2. **Listar Libros Registrados**: Muestra una lista de todos los libros en el catálogo.
@@ -85,9 +87,11 @@ Opcion:
 ![image](https://github.com/user-attachments/assets/ac79366c-4c9a-4be0-85cd-5d68d096a49b)
 
 
+
 3. **Listar Autores Registrados**: Muestra una lista de autores junto con sus datos relevantes.
 
 ![image](https://github.com/user-attachments/assets/cd423a91-c915-4a06-b6f9-a4a409e33c92)
+
 
 
 4. **Listar Autores vivos en un determinado año**: Permite al usuario ingresar un año y ver los autores que aún vivían en esa fecha, basándose en la fecha de nacimiento y fallecimiento registrada.
@@ -95,9 +99,14 @@ Opcion:
 ![image](https://github.com/user-attachments/assets/00f1467d-1bfb-4dfc-876d-c7e0ae8c16d6)
 
 
+
 5. **Listar Libros por Idioma**: Muestra libros disponibles en un idioma específico. Los idiomas deben ingresarse en formato ISO 639-1 (ej., es para español).
 
 ![image](https://github.com/user-attachments/assets/368feb7d-8fb3-4315-97c0-257b6e2e5900)
 
+
+**Video Demostrativo**
+
+[![Alt text](https://img.youtube.com/vi/mVWu4COG43I/0.jpg)](https://www.youtube.com/watch?v=mVWu4COG43I)
 
 
